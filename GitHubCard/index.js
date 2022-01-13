@@ -5,13 +5,7 @@ import axios from "axios";
     https://api.github.com/users/<your name>
 */
 
-axios.get('https://api.github.com/users/schuyler-minor')
-.then((res) => {
-  console.log(res.data)
-})
-.catch((err) => {
-  console.error(err);
-})
+
 
 
 
@@ -39,29 +33,68 @@ axios.get('https://api.github.com/users/schuyler-minor')
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell', 'schuyler-minor'];
 
-function githubCard(githubObj) {
+for (let i = 0; i< followersArray.length; i++) {
+  getGitCard(followersArray[i]);
+}
+
+function getGitCard(username) {
+  axios.get(`https://api.github.com/users/${username}`)
+.then((res) => {
+  document.querySelector('.cards').appendChild(githubCard(res.data));
+})
+.catch((err) => {
+  console.error(err);
+})
+}
+
+
+
+function githubCard(gitInfo) {
   const cardWrapper = document.createElement('div');
   const image = document.createElement('img');
   const cardInfo = document.createElement('div');
   const name = document.createElement('h3');
-  const userName = document.createElement('p');
+  const login = document.createElement('p');
   const location = document.createElement('p');
   const profile = document.createElement('p');
+  const profileLink = document.createElement('a');
   const followers = document.createElement('p');
   const following = document.createElement('p');
   const bio = document.createElement('p');
 
+  image.src = gitInfo.avatar_url;
+  image.alt = "github user";
+  name.textContent = gitInfo.name;
+  login.textContent = gitInfo.login;
+  location.textContent = gitInfo.location;
+  profile.textContent = "Profile";
+  profileLink.textContent = "Link to profile";
+  profileLink.href = gitInfo.html_url;
+  followers.textContent = `Followers: ${gitInfo.followers}`;
+  following.textContent = `Following: ${gitInfo.following}`;
+  bio.textContent = gitInfo.bio;
+
+  cardWrapper.appendChild(image);
+  cardWrapper.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(login);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(profileLink);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+
   cardWrapper.classList.add('card');
-  image.classList.add('image');
   cardInfo.classList.add('card-info');
   name.classList.add('name');
-  userName.classList('username');
+  login.classList.add('username');
 
 
-  
-
+return cardWrapper;
 
 }
 
